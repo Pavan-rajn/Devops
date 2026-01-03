@@ -1,0 +1,91 @@
+Docker Networking – Quick Cheat-Sheet
+
+Purpose: Docker networking enables container-to-container, container-to-host, and external communication using isolated network stacks built on Linux namespaces and bridges.
+
+Network Types
+
+Bridge (default): Single-host communication; default bridge has no DNS, custom bridge supports DNS via container names (most commonly used).
+
+Host: Container shares host’s network stack; no port mapping; high performance but low isolation.
+
+None: No network access; maximum isolation.
+
+Overlay: Multi-host networking; used with Docker Swarm / Kubernetes.
+
+Macvlan: Container gets IP from physical LAN; appears as a real device.
+
+Key Commands
+
+docker network ls → list networks
+
+docker network inspect <net> → view network details
+
+docker network create <net> → create custom network
+
+docker network connect <net> <container> → attach container
+
+Container Communication
+
+❌ Do NOT use container IPs (they change)
+
+✅ Use container names / service names (Docker DNS)
+
+DNS works only in user-defined networks, not default bridge
+
+Port Mapping
+
+Syntax: -p host_port:container_port
+
+Example: -p 8080:80
+
+Required for external access, not needed for internal container-to-container traffic
+
+Docker DNS
+
+Built-in DNS server
+
+Resolves container names to IPs
+
+Works automatically in custom bridge & Docker Compose networks
+
+Docker Compose Networking
+
+One network created per project by default
+
+Services communicate using service names
+
+No need to expose internal ports
+
+Best Practices
+
+Use custom bridge networks
+
+Expose only required ports
+
+Use service/container names, not IPs
+
+Avoid host network in production unless required
+
+Use overlay networks for multi-host setups
+
+Common Interview Points
+
+Default network → bridge
+
+DNS works → user-defined networks
+
+External traffic → port mapping
+
+Internal traffic → no port mapping
+
+Multi-host → overlay
+
+Highest isolation → none network
+
+Troubleshooting Tips
+
+App not accessible → check port mapping & listen address (0.0.0.0)
+
+Containers not talking → same network? DNS name correct?
+
+No internet → DNS/network config issue
